@@ -1,0 +1,68 @@
+.App {
+  text-align: left;
+}
+
+div {
+  white-space: pre;
+}
+
+.App-logo {
+  animation: App-logo-spin infinite 20s linear;
+  height: 40vmin;
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+.user_card {
+  border: 1px solid red;
+  width: 50%;
+  margin: 50px 25px;
+  padding: 50px;
+}
+
+.table_user {
+  font-family: arial, sans-serif;
+  font-size: 25px;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.td_user {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+  font-size: 25px;
+}
+
+.th_user {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+  font-size: 25px;
+}
+
+.tr_user:nth-child(even) {
+  background-color: #dddddd;
+  font-size: 25px;
+}
