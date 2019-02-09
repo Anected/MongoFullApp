@@ -39,6 +39,11 @@ h2 a {
   font-size: 1em;
   text-align: left;
   color: #185875;
+
+
+}
+.container tbody :active{
+  color: #01a715;
 }
 
 .container td {
@@ -96,19 +101,16 @@ h2 a {
 
 .container td:first-child { color: #57fb5e; }
 
-.container tbody  :hover {
-  background-color: #464A52;
-  -webkit-box-shadow: 0 6px 6px -6px #0E1119;
-  -moz-box-shadow: 0 6px 6px -6px #0E1119;
-  box-shadow: 0 6px 6px -6px #0E1119;
+.container tbody {
+  cursor: pointer;
+  transition: background 9999999s;
+  user-select: none;
 }
 
 .container tbody :hover {
   background-color: #4b74ff;
   color: #403E10;
-
   box-shadow: #177c7f -1px 1px;
-
   transition-delay: 0s;
   transition-duration: 0.4s;
   transition-property: all;
@@ -133,7 +135,7 @@ h2 a {
   max-width: 200px;
   margin: 0 auto;
   border-radius: 2px;
-  padding: 1.4rem 2rem 1.6rem;
+  padding: 1rem 1rem 1rem;
   background: rgba(57, 63, 84, 0.8);
   font-size: 1rem;
   color: #57fb5e;
@@ -143,26 +145,24 @@ h2 a {
 .input:focus {
   border-color: #d1fb6d;
 }
+.onbuton{
+  position: absolute;
+  text-align:center;
+  width:100%;
+}
 .button {
   position: relative;
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-orient: horizontal;
-  -webkit-box-direction: normal;
-  -ms-flex-direction: row;
-  flex-direction: row;
   width: 100%;
   max-width: 150px;
-  margin: 0 auto;
   border-radius: 2px;
-  padding: 1rem 1rem 1rem 1rem;
+  padding: 0.5rem 0.5rem 0.5rem 0.5rem;
   background: rgba(75, 116, 255, 0.8);
   font-size: 1rem;
   color: #57fb5e;
   font-family: 'Century Gothic', sans-serif;
   border-color: #323c50;
   text-align: center;
+  float:inherit;
 }
 .button:focus {
   border-color: #d1fb6d;

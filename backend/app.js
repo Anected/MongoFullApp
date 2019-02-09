@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const express = require("express");
+const bodyParser = require('body-parser');
 const cors = require("cors");
 const Schema = mongoose.Schema;
 const app = express();
@@ -52,12 +53,10 @@ app.post("/api/users", jsonParser, function (req, res) {
 });
 
 app.delete("/api/users/:id", function(req, res){
-
-    const id = req.params.id;
-    User.findByIdAndDelete(id, function(err, user){
-
-        if(err) return console.log(err);
-        res.send(user);
+    const  {id}  = req.params;
+    User.findOneAndDelete ({_id: id}, err => {
+        if (err) return res.send(err);
+        return res.json({ success: true });
     });
 });
 

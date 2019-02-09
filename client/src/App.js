@@ -6,7 +6,8 @@ class App extends Component {
     state = {
         name: null,
         age: null,
-        users:[]
+        users: [],
+        delId: null
     };
 
     componentDidMount() {
@@ -16,12 +17,12 @@ class App extends Component {
     getDataFromDb = () => {
         return axios.get('http://localhost:3001/api/users')
             .then(res => {
-                this.setState({users: res.data})
+                this.setState({users: res.data});
             })
     };
 
     putDataToDB = (userName, userAge) => {
-        if (userName != null && userAge != null){
+        if (userName != null && userAge != null) {
             axios.post("http://localhost:3001/api/users", {
                 name: userName,
                 age: userAge
@@ -31,6 +32,21 @@ class App extends Component {
                 })
         }
     };
+    deleteFromDB = idTodelete => {
+        let objIdToDelete = null;
+        this.state.users.forEach(dat => {
+            if (dat._id === idTodelete) {
+                objIdToDelete = dat._id;
+            }
+        });
+        console.log(objIdToDelete);
+        axios.delete("http://localhost:3001/api/users/"+objIdToDelete, {
+            id: objIdToDelete
+        })
+            .then(res => {
+                return this.getDataFromDb()
+            })
+    };
 
     render() {
         const {users} = this.state;
@@ -39,20 +55,20 @@ class App extends Component {
                 <table className={"container"}>
                     <caption>Пользователи</caption>
                     <thead>
-                    <tr >
+                    <tr>
                         <th>Id</th>
                         <th>Имя</th>
-                        <th >Возраст</th>
+                        <th>Возраст</th>
                     </tr>
                     </thead>
-                    <tbody>
+                    <tbody >
                     {users.map((user, key) => {
                         const {_id, name, age} = user;
                         return (
-                            <tr onClick =key={key} >
-                                <td >{_id}</td>
+                            <tr onClick={() => this.setState({delId:user._id})} key={key}>
+                                <td>{_id}</td>
                                 <td>{name}</td>
-                                <td >{age}</td>
+                                <td>{age}</td>
                             </tr>
                         )
                     })}
@@ -72,9 +88,14 @@ class App extends Component {
                         className="input"
 
                     />
-                    <button className="button" onClick={() => this.putDataToDB(this.state.name, this.state.age)}>
+                    <div className={"onbuton"}>
+                    <button type="reset" className="button" onClick={() => this.putDataToDB(this.state.name, this.state.age)}>
                         Добавить пользователя
                     </button>
+                    <button className="button" onClick={() => this.deleteFromDB(this.state.delId)} >
+                        Удалить пользователя
+                    </button>
+                    </div>
                 </div>
             </div>
         );
