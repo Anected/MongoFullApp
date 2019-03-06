@@ -10,6 +10,11 @@ class App extends Component {
         name: null,
         age: null,
         users: [],
+        userDel: {
+            name: null,
+            age:null,
+            id: null
+        },
         totalPages: null,
         activePage: 1,
         activePageUsers: [],
@@ -132,6 +137,24 @@ class App extends Component {
 
     };
 
+    getTableData = (user) => {
+    const {name,age,_id} = user;
+    this.setState ({
+        userDel:{
+            name:name,
+            age: age,
+            id:_id
+        }
+    });
+    };
+
+    CloseDelete = () => {
+        this.handleCloseModal();
+        this.
+    };
+
+
+
 
     render() {
         const {activePageUsers} = this.state;
@@ -146,34 +169,34 @@ class App extends Component {
                         <th>Возраст</th>
                     </tr>
                     </thead>
-                    <tbody>
+                    <tbody >
                     {activePageUsers.map((user, key) => {
                         const {_id, name, age} = user;
-
                         return (
-                            <tr key={key}>
-                                <td>{_id}</td>
-                                <td>{name}</td>
-                                <td>{age}</td>
+                            <tr onClick={() => this.getTableData(user)} key={key}>
+                                <td >{_id} </td>
+                                <td >{name}</td>
+                                <td >{age}</td>
                                 <td>
-                                    <div>
+                                    <div className="onbuton">
                                         <input name='delete' type="button" className='tbutton' value="Удалить"
-                                               onClick={this.handleOpenModal}/>
+                                               onClick={(e) => this.handleOpenModal(e)}/>
                                         <ReactModal
-                                            name='delete'
                                             className='modal'
-                                            onRequestClose={this.handleCloseModal}
                                             isOpen={this.state.showModalDelete}
                                             contentLabel=" Modal Example"
                                         >
                                             <label>
                                                 <h2> Вы действительно хотите удалить следующего пользователя? </h2>
-                                                <h3> id : {user._id} </h3>
-                                                <h3> Имя : {user.name} </h3>
-                                                <h3> Возраст : {user.age} </h3>
+                                                <h3> id : {this.state.userDel.id} </h3>
+                                                <h3> Имя : {this.state.userDel.name} </h3>
+                                                <h3> Возраст : {this.state.userDel.age} </h3>
                                                 <div className="onbuton">
-                                                    <button type="button" className="button" value="Удалить"
-                                                            onClick={() => this.deleteFromDB(user._id)}
+                                                    <button name='delete' type="reset" className="button" value="Удалить"
+                                                            onClick={
+                                                                this.handleCloseModal && this.deleteFromDB(this.state.userDel.id)
+                                                                //this.deleteFromDB(this.state.userDel.id)
+                                                            }
                                                     >
                                                         Удалить
                                                     </button>
