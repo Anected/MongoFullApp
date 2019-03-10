@@ -119,7 +119,7 @@ h2 a {
 }
 
 .container th {
-    background-color: #1F2739;
+    background-color: #323c50;
 }
 
 .container thead {
@@ -128,7 +128,17 @@ h2 a {
     text-align: center;
     line-height: 1em;
     padding-bottom: 2em;
-    color: #d1fb6d;
+    color: #97fbd9;
+    cursor: s-resize
+
+
+}
+.container thead :hover {
+    background-color: #6bff7a;
+    transition-delay: 0s;
+    transition-duration: 0.4s;
+    transition-property: all;
+    transition-timing-function: line;
 }
 
 .tbutton {
