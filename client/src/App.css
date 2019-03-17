@@ -267,4 +267,74 @@ h2 a {
     transform: translate(-50%, -50%);
 
 }
+.modalUpdate {
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    background-color: #323c50;
+    width: 700px  ;
+    max-width: 75rem;
+    min-height: 10rem;
+    padding: 1rem;
+    border-radius: 3px;
+    top: 50%;
+    left: 50%;
+    right: 50%;
+    bottom: 50%;
+    transform: translate(-50%, -50%);
+
+}
+.update {
+    text-align: left;
+    width: 100%;
+    margin: auto;
+    display: table;
+    padding: auto
+}
+
+.update td, .update th {
+    padding-bottom: 1%;
+    padding-top: 1%;
+    padding-left: 1%;
+}
+
+
+.update caption {
+    font-size: 1.5em;
+    font-weight: bold;
+    text-align: center;
+    line-height: 1em;
+    color: #639ffb;
+}
+
+.update th {
+    background-color: #323c50;
+}
+
+.update thead {
+    font-size: 1.2em;
+    font-weight: 300;
+    text-align: center;
+    line-height: 1em;
+    padding-bottom: 2em;
+    color: #97fbd9;
+
+
+}
+.search{
+    position: relative;
+    display: table-cell;
+    flex-direction: row;
+    width: 50%;
+    max-width: 200px;
+    margin: 15px;
+    border-radius: 2px;
+    padding: 1rem 1rem 1rem;
+    background: rgba(57, 63, 84, 0.8);
+    font-size: 1rem;
+    color: #57fb5e;
+    font-family: 'Century Gothic', sans-serif;
+    border-color: #323c50;
+
+}
 

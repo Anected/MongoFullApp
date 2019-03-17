@@ -10,12 +10,11 @@ class App extends Component {
         name: null,
         age: null,
         users: [],
-        userDel: {
-            name: null,
-            age: null,
-            id: null
-        },
+        userDelName: '',
+        userDelAge: '',
+        userDelId: '',
         sortedUsers: [],
+        searchId: ' ',
         sorted: false,
         reverseSort: false,
         totalPages: null,
@@ -23,7 +22,8 @@ class App extends Component {
         activePageUsers: [],
         elementsOnPage: 5,
         showModalDelete: false,
-        showModalAdd: false
+        showModalAdd: false,
+        showModalUpdate: false
 
     };
 
@@ -51,6 +51,13 @@ class App extends Component {
     };
 
     pageUsers = () => {
+        this.setState((PreviosState) => {
+            if (PreviosState.elementsOnPage !== this.state.elementsOnPage) {
+                return {
+                    activePage: 1
+                }
+            }
+        });
         const indexActiveData = this.state.activePage * this.state.elementsOnPage;
         const previosActiveData = (this.state.activePage - 1) * this.state.elementsOnPage;
         if (this.state.sorted && this.state.activePage > 1 && this.state.activePage <= this.state.totalPages) {
@@ -100,6 +107,19 @@ class App extends Component {
                 return this.getDataFromDb()
             })
     };
+    updateDB = () => {
+        const {userDelName, userDelAge, userDelId} = this.state;
+        if (userDelName && userDelAge) {
+            axios.put("http://localhost:3001/api/users", {
+                id: userDelId,
+                name: userDelName,
+                age: userDelAge
+            })
+                .then(res => {
+                    return this.getDataFromDb()
+                })
+        }
+    };
 
     handleClickNextPage = () => {
         if (this.state.activePage < this.state.totalPages) {
@@ -132,15 +152,7 @@ class App extends Component {
         });
         this.getDataFromDb();
     };
-    handleOpenModal = (event) => {
-        const {name} = event.target;
-        if (name === 'delete') {
-            this.setState({showModalDelete: true});
-        } else {
-            this.setState({showModalAdd: true});
-        }
 
-    };
     sortUser = (event) => {
         const {id} = event.target;
 
@@ -152,35 +164,40 @@ class App extends Component {
         function compareAgeReverse(a, b) {
             if (a.age > b.age) return -1;
             if (a.age < b.age) return 1;
-    }
+        }
+
         function compareName(a, b) {
             if (a.name > b.name) return 1;
             if (a.name < b.name) return -1;
         }
+
         function compareNameReverse(a, b) {
             if (a.name > b.name) return -1;
             if (a.name < b.name) return 1;
         }
+
         function compareId(a, b) {
             if (a._id > b._id) return 1;
             if (a._id < b._id) return -1;
         }
+
         function compareIdReverse(a, b) {
             if (a._id > b._id) return -1;
             if (a._id < b._id) return 1;
         }
+
         if (id === 'name' && !this.state.reverseSort) {
             const sorted = this.state.users.sort(compareName);
             this.setState({sortedUsers: sorted});
             this.setState({sorted: true});
-            this.setState({reverseSort:true});
+            this.setState({reverseSort: true});
             this.setState(() => {
                 return this.pageUsers()
             })
         }
         else if (id === 'name' && this.state.reverseSort) {
             const sorted = this.state.users.sort(compareNameReverse);
-            this.setState({reverseSort:false});
+            this.setState({reverseSort: false});
             this.setState({sortedUsers: sorted});
             this.setState(() => {
                 return this.pageUsers()
@@ -190,34 +207,33 @@ class App extends Component {
             const sorted = this.state.users.sort(compareId);
             this.setState({sortedUsers: sorted});
             this.setState({sorted: true});
-            this.setState({reverseSort:true});
+            this.setState({reverseSort: true});
             this.setState(() => {
                 return this.pageUsers()
             })
         }
         else if (id === 'id' && this.state.reverseSort) {
             const sorted = this.state.users.sort(compareIdReverse);
-            this.setState({reverseSort:false});
+            this.setState({reverseSort: false});
             this.setState({sortedUsers: sorted});
             this.setState(() => {
                 return this.pageUsers()
             });
         }
-
 
 
         if (id === 'age' && !this.state.reverseSort) {
             const sorted = this.state.users.sort(compareAge);
             this.setState({sortedUsers: sorted});
             this.setState({sorted: true});
-            this.setState({reverseSort:true});
+            this.setState({reverseSort: true});
             this.setState(() => {
                 return this.pageUsers()
             })
         }
         else if (id === 'age' && this.state.reverseSort) {
             const sorted = this.state.users.sort(compareAgeReverse);
-            this.setState({reverseSort:false});
+            this.setState({reverseSort: false});
             this.setState({sortedUsers: sorted});
             this.setState(() => {
                 return this.pageUsers()
@@ -227,33 +243,68 @@ class App extends Component {
 
     };
 
-
-    deleteUserAndCloseModal = (event) => {
-        this.handleCloseModal(event);
-        this.deleteFromDB(this.state.userDel.id)
+    handleOpenModal = (event) => {
+        const {name} = event.target;
+        if (name === 'delete' && name !== undefined && name !== null) {
+            this.setState({showModalDelete: true});
+        } else if (name === 'add' && name !== undefined && name !== null) {
+            this.setState({showModalAdd: true});
+        }
+        else {
+            this.setState({showModalUpdate: true});
+        }
     };
 
     handleCloseModal = (event) => {
         const {name} = event.target;
-        if (name === 'delete') {
+        if (name === 'delete' && name !== undefined && name !== null) {
             this.setState({showModalDelete: false});
-        } else {
+        } else if (name === 'add' && name !== undefined && name !== null) {
             this.setState({showModalAdd: false});
+        }
+        else {
+            this.setState({showModalUpdate: false});
         }
 
     };
 
+
+    deleteUserAndCloseModal = (event) => {
+        this.handleCloseModal(event);
+        this.deleteFromDB(this.state.userDelId)
+    };
+
+    updateUserAndCloseModal = (event) => {
+        this.handleCloseModal(event);
+        this.updateDB();
+    };
     getTableData = (user) => {
         const {name, age, _id} = user;
         this.setState({
-            userDel: {
-                name: name,
-                age: age,
-                id: _id
-            }
+            userDelName: name,
+            userDelAge: age,
+            userDelId: _id
         });
     };
 
+    handleChange = (event) => {
+        const {name, value} = event.target;
+        if (name === 'name') {
+            this.setState({userDelName: value})
+        } else if (name === 'age') {
+            this.setState({userDelAge: value})
+        } else if (name === 'id') {
+            this.setState({userDelId: value})
+        } else if (name === 'searchId') {
+            this.setState({searchId: value});
+            console.log(this.state.searchId)
+        }
+    };
+    handleSearch = () => {
+        console.log(typeof(this.state.searchId))
+       // {activePageUsers.map((user, key) => {
+        //    const {_id, name, age} = user;
+    };
 
     render() {
         const {activePageUsers} = this.state;
@@ -267,9 +318,9 @@ class App extends Component {
                 >
                     <label>
                         <h2> Вы действительно хотите удалить следующего пользователя? </h2>
-                        <h3> id : {this.state.userDel.id} </h3>
-                        <h3> Имя : {this.state.userDel.name} </h3>
-                        <h3> Возраст : {this.state.userDel.age} </h3>
+                        <h3> id : {this.state.userDelId} </h3>
+                        <h3> Имя : {this.state.userDelName} </h3>
+                        <h3> Возраст : {this.state.userDelAge} </h3>
                         <div className="onbuton">
 
                             <button name={'delete'} type="reset" className='button'
@@ -284,8 +335,84 @@ class App extends Component {
                     </label>
                 </ReactModal>
 
+                <ReactModal
+                    name='update'
+                    className='modalUpdate'
+                    isOpen={this.state.showModalUpdate}
+                    contentLabel=" Modal Example"
+                >
+                    <label>
+                        <table className='update'>
+                            <caption>
+                                Изменение пользователя
+                            </caption>
+                            <thead>
+                            <tr>
+                                <th id='id'>Id</th>
+                                <th id='name'>Имя</th>
+                                <th id='age'>Возраст</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td><input
+                                    type="text"
+                                    name='id'
+                                    className="input"
+                                    onChange={this.handleChange}
+                                    value={this.state.userDelId}
+                                /></td>
+                                <td><input
+                                    type="text"
+                                    name='name'
+                                    onChange={this.handleChange}
+                                    className="input"
+                                    value={this.state.userDelName}
+                                /></td>
+                                <td><input
+                                    type="number"
+                                    name='age'
+                                    onChange={this.handleChange}
+                                    className="input"
+                                    value={this.state.userDelAge}
+                                /></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <div className="onbuton">
+                            <button name='update' type="reset" className='button'
+                                    onClick={this.updateUserAndCloseModal}>Применить изменения
+                            </button>
+
+                            <button name='update' type="reset" className='button'
+                                    onClick={this.deleteUserAndCloseModal}>Удалить
+                            </button>
+                            <button name='update' type="reset" className="button"
+                                    onClick={this.handleCloseModal}
+                            >
+                                Отмена
+                            </button>
+                        </div>
+                    </label>
+                </ReactModal>
+
                 <table className="container">
-                    <caption>Пользователи</caption>
+                    <caption>
+                        Пользователи
+
+                        <input
+                            type="text"
+                            name='searchId'
+                            className="search"
+                            placeholder="Введите текст для поиска"
+                            onChange={this.handleChange}
+                            value={this.state.searchId || ''}
+                        />
+
+                        <button name='add' type="reset" className='button' onClick={this.handleSearch   } >Поиск
+                        </button>
+
+                    </caption>
                     <thead>
                     <tr>
                         <th id='id' onClick={this.sortUser}>Id</th>
@@ -298,9 +425,9 @@ class App extends Component {
                         const {_id, name, age} = user;
                         return (
                             <tr onClick={() => this.getTableData(user)} key={key}>
-                                <td>{_id} </td>
-                                <td>{name}</td>
-                                <td>{age}</td>
+                                <td onClick={(e) => this.handleOpenModal(e)}>{_id} </td>
+                                <td onClick={(e) => this.handleOpenModal(e)}>{name}</td>
+                                <td onClick={(e) => this.handleOpenModal(e)}>{age}</td>
                                 <td>
                                     <div className="onbuton">
                                         <input name='delete' type="button" className='tbutton' value="Удалить"
@@ -358,11 +485,11 @@ class App extends Component {
                             value={this.state.age || ''}
                         />
                         <div className="onbuton">
-                            <button type="reset" className="button"
+                            <button type="reset" className="button" name='add'
                                     onClick={() => this.putDataToDB(this.state.name, this.state.age)}>
                                 Добавить пользователя
                             </button>
-                            <button type="reset" className='button' onClick={this.handleCloseModal}>Выйти
+                            <button name='add' type="reset" className='button' onClick={this.handleCloseModal}>Выйти
                             </button>
                         </div>
                     </div>
