@@ -14,7 +14,8 @@ class App extends Component {
         userDelAge: '',
         userDelId: '',
         sortedUsers: [],
-        searchId: ' ',
+        searchUsers: [],
+        searchId: null,
         sorted: false,
         reverseSort: false,
         totalPages: null,
@@ -295,15 +296,27 @@ class App extends Component {
             this.setState({userDelAge: value})
         } else if (name === 'id') {
             this.setState({userDelId: value})
-        } else if (name === 'searchId') {
-            this.setState({searchId: value});
-            console.log(this.state.searchId)
         }
     };
     handleSearch = () => {
-        console.log(typeof(this.state.searchId))
-       // {activePageUsers.map((user, key) => {
-        //    const {_id, name, age} = user;
+        if (/[0-9]/.test(this.state.searchId)) {
+            let array = [];
+            this.state.users.forEach(user => {
+                if (user.age === +this.state.searchId){
+                    array.push(user);
+                }
+            });
+            this.setState({activePageUsers:array})
+        }
+        else{
+            let array = [];
+            this.state.users.forEach(user => {
+                if (user.name === this.state.searchId){
+                    array.push(user);
+                }
+            });
+            this.setState({activePageUsers:array})
+        }
     };
 
     render() {
@@ -405,11 +418,11 @@ class App extends Component {
                             name='searchId'
                             className="search"
                             placeholder="Введите текст для поиска"
-                            onChange={this.handleChange}
+                            onChange={e => this.setState({searchId: e.target.value})}
                             value={this.state.searchId || ''}
                         />
 
-                        <button name='add' type="reset" className='button' onClick={this.handleSearch   } >Поиск
+                        <button name='add' type="reset" className='button' onClick={this.handleSearch}>Поиск
                         </button>
 
                     </caption>
